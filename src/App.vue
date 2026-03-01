@@ -21,35 +21,35 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 }
-
-// 创建立方体
 function createCube() {
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
   const cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
 }
-
-// 轨道控制器
 function controlsCreate() {
   controls = new OrbitControls(camera, renderer.domElement);
 }
-
-// 循环渲染
 function renderLoop() {
   requestAnimationFrame(renderLoop);
   controls.update();
   renderer.render(scene, camera);
 }
+function createAxiosHelper() {
+  const axesHelper = new THREE.AxesHelper(5);
+  scene.add(axesHelper);
+}
 
+// 初始化
 init();
+// 轨道控制器
 controlsCreate();
+// 创建坐标轴
+createAxiosHelper();
+// 创建立方体
 createCube();
+// 循环渲染
 renderLoop();
-
-
-// const axesHelper = new THREE.AxesHelper(5);
-// scene.add(axesHelper);
 
 // function animate(time) {
 //   controls.update();
