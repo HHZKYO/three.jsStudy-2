@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-let scene, camera, renderer, controls;
+let scene, camera, renderer, controls, cube;
 function init() {
   // 场景
   scene = new THREE.Scene();
@@ -24,7 +24,7 @@ function init() {
 function createCube() {
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-  const cube = new THREE.Mesh(geometry, material);
+  cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
 }
 function controlsCreate() {
@@ -47,7 +47,6 @@ function createAxiosHelper() {
   const axesHelper = new THREE.AxesHelper(5);
   scene.add(axesHelper);
 }
-
 function renderResize() {
   window.addEventListener("resize", () => {
     // 1. 更新相机的宽高比
@@ -63,6 +62,11 @@ function renderResize() {
     // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   });
 }
+function moveCube() {
+  cube.position.x = 5; 
+  cube.rotation.x = Math.PI / 4; // 方向是逆时针旋转的
+  cube.scale.set(1, 1, 2)
+}
 
 
 // 初始化
@@ -73,6 +77,8 @@ controlsCreate();
 createAxiosHelper();
 // 创建立方体
 createCube();
+// 变换立方体
+moveCube()
 // 适配窗口大小
 renderResize();
 // 循环渲染
