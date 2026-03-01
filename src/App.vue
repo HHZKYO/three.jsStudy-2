@@ -31,12 +31,12 @@ function controlsCreate() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true; // 启用阻尼效果
   // controls.autoRotate = true; // 启用自动旋转
-  // 限制垂直旋转角度 
-  controls.maxPolarAngle = Math.PI / 2
-  controls.minPolarAngle = 0;
-  // 限制水平旋转角度
-  controls.maxAzimuthAngle = Math.PI / 2;
-  controls.minAzimuthAngle = 0;
+  // 限制垂直旋转角度
+  // controls.maxPolarAngle = Math.PI / 2;
+  // controls.minPolarAngle = 0;
+  // // 限制水平旋转角度
+  // controls.maxAzimuthAngle = Math.PI / 2;
+  // controls.minAzimuthAngle = 0;
 }
 function renderLoop() {
   requestAnimationFrame(renderLoop);
@@ -48,6 +48,23 @@ function createAxiosHelper() {
   scene.add(axesHelper);
 }
 
+function renderResize() {
+  window.addEventListener("resize", () => {
+    // 1. 更新相机的宽高比
+    camera.aspect = window.innerWidth / window.innerHeight;
+
+    // 2. 更新相机的投影矩阵（必须调用）
+    camera.updateProjectionMatrix();
+
+    // 3. 更新渲染器的尺寸
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // 4. （可选）如果使用了像素比，确保在移动端横竖屏切换时也更新
+    // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  });
+}
+
+
 // 初始化
 init();
 // 轨道控制器
@@ -56,6 +73,8 @@ controlsCreate();
 createAxiosHelper();
 // 创建立方体
 createCube();
+// 适配窗口大小
+renderResize();
 // 循环渲染
 renderLoop();
 
