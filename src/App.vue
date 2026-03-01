@@ -1,6 +1,6 @@
 <script setup>
 import * as THREE from "three";
-// import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 let scene, camera, renderer, controls;
 function init() {
@@ -30,17 +30,26 @@ function createCube() {
   scene.add(cube);
 }
 
-init();
-createCube();
+// 轨道控制器
+function controlsCreate() {
+  controls = new OrbitControls(camera, renderer.domElement);
+}
 
-renderer.render(scene, camera);
+// 循环渲染
+function renderLoop() {
+  requestAnimationFrame(renderLoop);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+init();
+controlsCreate();
+createCube();
+renderLoop();
+
 
 // const axesHelper = new THREE.AxesHelper(5);
 // scene.add(axesHelper);
-
-// // 轨道控制器
-// controls = new OrbitControls(camera, renderer.domElement);
-
 
 // function animate(time) {
 //   controls.update();
