@@ -13,16 +13,27 @@ function init() {
     0.1,
     1000,
   );
+  camera.position.z = 5;
   // 渲染器
   renderer = new THREE.WebGLRenderer({
     antialias: true, // 开启抗锯齿
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-  renderer.render(scene, camera);
+}
+
+// 创建立方体
+function createCube() {
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
 }
 
 init();
+createCube();
+
+renderer.render(scene, camera);
 
 // const axesHelper = new THREE.AxesHelper(5);
 // scene.add(axesHelper);
@@ -30,12 +41,6 @@ init();
 // // 轨道控制器
 // controls = new OrbitControls(camera, renderer.domElement);
 
-// const geometry = new THREE.BoxGeometry(1, 1, 1);
-// const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-// const cube = new THREE.Mesh(geometry, material);
-// scene.add(cube);
-
-// camera.position.z = 5;
 
 // function animate(time) {
 //   controls.update();
