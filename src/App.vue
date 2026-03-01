@@ -29,6 +29,14 @@ function createCube() {
 }
 function controlsCreate() {
   controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; // 启用阻尼效果
+  // controls.autoRotate = true; // 启用自动旋转
+  // 限制垂直旋转角度 
+  controls.maxPolarAngle = Math.PI / 2
+  controls.minPolarAngle = 0;
+  // 限制水平旋转角度
+  controls.maxAzimuthAngle = Math.PI / 2;
+  controls.minAzimuthAngle = 0;
 }
 function renderLoop() {
   requestAnimationFrame(renderLoop);
