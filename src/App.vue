@@ -76,11 +76,43 @@ function createGui() {
   gui.add(controls, "reset").name("重置控制器");
   // 添加颜色控制
   const colorObj = {
-    'col': `#${cube.material.color.getHexString()}`,
-  }
-  gui.addColor(colorObj, 'col').name('立方体颜色').onChange((value) => {
-    cube.material.color.set(value);
-  });
+    col: `#${cube.material.color.getHexString()}`,
+  };
+  gui
+    .addColor(colorObj, "col")
+    .name("立方体颜色")
+    .onChange((value) => {
+      cube.material.color.set(value);
+    });
+  // 创建分组，影响立方体位置
+  const folder = gui.addFolder("立方体位置");
+  folder.add(cube.position, "x", 0, 10, 0.1).name("X轴位置");
+  folder.add(cube.position, "y", 0, 10, 0.1).name("Y轴位置");
+  folder.add(cube.position, "z", 0, 10, 0.1).name("Z轴位置");
+  folder.open(); // 默认展开
+  // 下拉菜单
+  const options = {
+    选项1: "option1",
+    选项2: "option2",
+    选项3: "option3",
+  };
+  gui
+    .add({ option: "option2" }, "option", options)
+    .name("选择一个选项")
+    .onChange((value) => {
+      // console.log("选中了:", value);
+      switch (value) {
+        case "option1":
+          cube.material.color.set(0xff0000);
+          break;
+        case "option2":
+          cube.material.color.set(0x00ff00);
+          break;
+        case "option3":
+          cube.material.color.set(0x0000ff);
+          break;
+      }
+    });
 }
 
 // 初始化
