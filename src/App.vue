@@ -1,6 +1,7 @@
 <script setup>
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import * as dat from "dat.gui"; // 导入dat.GUI
 
 let scene, camera, renderer, controls, cube;
 function init() {
@@ -63,11 +64,24 @@ function renderResize() {
   });
 }
 function moveCube() {
-  cube.position.x = 5; 
+  cube.position.x = 5;
   cube.rotation.x = Math.PI / 4; // 方向是逆时针旋转的
-  cube.scale.set(1, 1, 2)
+  cube.scale.set(1, 1, 2);
 }
-
+function createGui() {
+  // 创建GUI实例
+  const gui = new dat.GUI();
+  gui.add(document, "title");
+  gui.add(cube, "visible").name("立方体可见性");
+  gui.add(controls, "reset").name("重置控制器");
+  // 添加颜色控制
+  const colorObj = {
+    'col': `#${cube.material.color.getHexString()}`,
+  }
+  gui.addColor(colorObj, 'col').name('立方体颜色').onChange((value) => {
+    cube.material.color.set(value);
+  });
+}
 
 // 初始化
 init();
@@ -78,7 +92,9 @@ createAxiosHelper();
 // 创建立方体
 createCube();
 // 变换立方体
-moveCube()
+moveCube();
+// 创建GUI
+createGui();
 // 适配窗口大小
 renderResize();
 // 循环渲染
