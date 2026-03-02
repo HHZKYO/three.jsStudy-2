@@ -5,6 +5,7 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 
 let scene, camera, renderer, controls, cube;
 let stats; // 性能监视器
+let group = new THREE.Group(); // 创建分组
 function init() {
   // 场景
   scene = new THREE.Scene();
@@ -45,8 +46,9 @@ function createCube() {
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(item.x, item.y, item.z);
     cube.name = "cube";
-    scene.add(cube);
+    group.add(cube); // 将立方体添加到分组中
   });
+  scene.add(group);
 }
 function controlsCreate() {
   controls = new OrbitControls(camera, renderer.domElement);
@@ -91,13 +93,12 @@ function createStats() {
 }
 function removeCube() {
   window.addEventListener("dblclick", (event) => {
-    const arr = scene.children.filter((item) => item.name === "cube");
-    console.log(arr);
-    if (arr.length > 0) {
-      arr[0].geometry.dispose(); // 释放几何体资源
-      arr[0].material.dispose(); // 释放材质资源
-      scene.remove(arr[0]); // 从场景中移除立方体
-    }
+    group.children.map((item) => {
+      item.geometry.dispose(); // 释放几何体内存
+      item.material.dispose(); // 释放材质内存
+      group.remove(item); // 从分组中移除对象
+    });
+    scene.remove(group); // 从场景中移除分组
   });
 }
 
