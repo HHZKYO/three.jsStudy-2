@@ -1,8 +1,10 @@
 <script setup>
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 
 let scene, camera, renderer, controls, cube;
+let stats; // 性能监视器
 function init() {
   // 场景
   scene = new THREE.Scene();
@@ -51,11 +53,12 @@ function controlsCreate() {
   controls.enableDamping = true; // 启用阻尼效果
 }
 function renderLoop() {
+  stats.update();
   requestAnimationFrame(renderLoop);
   controls.update();
   renderer.render(scene, camera);
 }
-function createAxiosHelper() {
+function createAxesHelper() {
   const axesHelper = new THREE.AxesHelper(5);
   scene.add(axesHelper);
 }
@@ -74,15 +77,29 @@ function renderResize() {
     // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   });
 }
+function createStats() {
+  // 1. 创建性能监视器实例
+  stats = new Stats();
+  // 2. 设置监视器显示的面板 (0: fps, 1: ms, 2: mb) [citation:4]
+  stats.showPanel(0); // 默认显示 FPS 面板
+  // 3. 设置监视器的样式（比如放到左上角）
+  stats.dom.style.position = "fixed";
+  stats.dom.style.top = "0px";
+  stats.dom.style.left = "0px";
+  // 4. 将监视器的DOM元素添加到页面
+  document.body.appendChild(stats.dom);
+}
 
 // 初始化
 init();
 // 轨道控制器
 controlsCreate();
 // 创建坐标轴
-createAxiosHelper();
+createAxesHelper();
 // 创建立方体
 createCube();
+// 创建性能监视器
+createStats();
 // 适配窗口大小
 renderResize();
 // 循环渲染
