@@ -1,7 +1,6 @@
 <script setup>
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import * as dat from "dat.gui"; // 导入dat.GUI
 
 let scene, camera, renderer, controls, cube;
 function init() {
@@ -14,6 +13,8 @@ function init() {
     0.1,
     1000,
   );
+  camera.position.x = 5;
+  camera.position.y = 5;
   camera.position.z = 5;
   // 渲染器
   renderer = new THREE.WebGLRenderer({
@@ -24,26 +25,30 @@ function init() {
 }
 function createCube() {
   const geometry = new THREE.BoxGeometry(1, 1, 1);
-  // 定义颜色数组
-  const colorArr = ["red", "blue", "green", "yellow", "cyan", "magenta"];
-  // 把每种颜色映射成材质对象
-  const materialArr = colorArr.map((colorStr) => {
-    return new THREE.MeshBasicMaterial({ color: colorStr });
+  const cubeInfoArr = [];
+  for (let i = 0; i < 5; i++) {
+    cubeInfoArr.push({
+      color: Math.random() * 0xffffff,
+      w: Math.floor(Math.random() * (3 - 1 + 1)) + 1,
+      h: Math.floor(Math.random() * (3 - 1 + 1)) + 1,
+      d: Math.floor(Math.random() * (3 - 1 + 1)) + 1,
+      x: Math.floor(Math.random() * (5 - -5 + 1)) - 5,
+      y: Math.floor(Math.random() * (5 - -5 + 1)) - 5,
+      z: Math.floor(Math.random() * (5 - -5 + 1)) - 5,
+    });
+  }
+  console.log(cubeInfoArr);
+  cubeInfoArr.forEach((item) => {
+    const material = new THREE.MeshBasicMaterial({ color: item.color });
+    const geometry = new THREE.BoxGeometry(item.w, item.h, item.d);
+    const cube = new THREE.Mesh(geometry, material);
+    cube.position.set(item.x, item.y, item.z);
+    scene.add(cube);
   });
-  // console.log("materialArr", materialArr);
-  cube = new THREE.Mesh(geometry, materialArr);
-  scene.add(cube);
 }
 function controlsCreate() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true; // 启用阻尼效果
-  // controls.autoRotate = true; // 启用自动旋转
-  // 限制垂直旋转角度
-  // controls.maxPolarAngle = Math.PI / 2;
-  // controls.minPolarAngle = 0;
-  // // 限制水平旋转角度
-  // controls.maxAzimuthAngle = Math.PI / 2;
-  // controls.minAzimuthAngle = 0;
 }
 function renderLoop() {
   requestAnimationFrame(renderLoop);
@@ -69,57 +74,6 @@ function renderResize() {
     // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   });
 }
-function moveCube() {
-  // cube.position.x = 0;
-  // cube.rotation.x = Math.PI / 4; // 方向是逆时针旋转的
-  cube.scale.set(1, 1, 1);
-}
-function createGui() {
-  // 创建GUI实例
-  const gui = new dat.GUI();
-  gui.add(document, "title");
-  gui.add(cube, "visible").name("立方体可见性");
-  gui.add(controls, "reset").name("重置控制器");
-  // 添加颜色控制
-  const colorObj = {
-    col: `#${cube.material.color.getHexString()}`,
-  };
-  gui
-    .addColor(colorObj, "col")
-    .name("立方体颜色")
-    .onChange((value) => {
-      cube.material.color.set(value);
-    });
-  // 创建分组，影响立方体位置
-  const folder = gui.addFolder("立方体位置");
-  folder.add(cube.position, "x", 0, 10, 0.1).name("X轴位置");
-  folder.add(cube.position, "y", 0, 10, 0.1).name("Y轴位置");
-  folder.add(cube.position, "z", 0, 10, 0.1).name("Z轴位置");
-  folder.open(); // 默认展开
-  // 下拉菜单
-  const options = {
-    选项1: "option1",
-    选项2: "option2",
-    选项3: "option3",
-  };
-  gui
-    .add({ option: "option2" }, "option", options)
-    .name("选择一个选项")
-    .onChange((value) => {
-      // console.log("选中了:", value);
-      switch (value) {
-        case "option1":
-          cube.material.color.set(0xff0000);
-          break;
-        case "option2":
-          cube.material.color.set(0x00ff00);
-          break;
-        case "option3":
-          cube.material.color.set(0x0000ff);
-          break;
-      }
-    });
-}
 
 // 初始化
 init();
@@ -129,28 +83,10 @@ controlsCreate();
 createAxiosHelper();
 // 创建立方体
 createCube();
-// 变换立方体
-moveCube();
-// 创建GUI
-// createGui();
 // 适配窗口大小
 renderResize();
 // 循环渲染
 renderLoop();
-
-// function animate(time) {
-//   controls.update();
-//   renderer.render(scene, camera);
-// }
-// renderer.setAnimationLoop(animate);
-
-// 让它动起来
-// function animate(time) {
-//   cube.rotation.x = time / 2000;
-//   cube.rotation.y = time / 1000;
-//   renderer.render(scene, camera);
-// }
-// renderer.setAnimationLoop(animate);
 </script>
 
 <template></template>
