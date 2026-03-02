@@ -39,12 +39,12 @@ function createCube() {
       z: Math.floor(Math.random() * (5 - -5 + 1)) - 5,
     });
   }
-  console.log(cubeInfoArr);
   cubeInfoArr.forEach((item) => {
     const material = new THREE.MeshBasicMaterial({ color: item.color });
     const geometry = new THREE.BoxGeometry(item.w, item.h, item.d);
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(item.x, item.y, item.z);
+    cube.name = "cube";
     scene.add(cube);
   });
 }
@@ -89,6 +89,17 @@ function createStats() {
   // 4. 将监视器的DOM元素添加到页面
   document.body.appendChild(stats.dom);
 }
+function removeCube() {
+  window.addEventListener("dblclick", (event) => {
+    const arr = scene.children.filter((item) => item.name === "cube");
+    console.log(arr);
+    if (arr.length > 0) {
+      arr[0].geometry.dispose(); // 释放几何体资源
+      arr[0].material.dispose(); // 释放材质资源
+      scene.remove(arr[0]); // 从场景中移除立方体
+    }
+  });
+}
 
 // 初始化
 init();
@@ -100,6 +111,8 @@ createAxesHelper();
 createCube();
 // 创建性能监视器
 createStats();
+// 双击删除立方体
+removeCube();
 // 适配窗口大小
 renderResize();
 // 循环渲染
